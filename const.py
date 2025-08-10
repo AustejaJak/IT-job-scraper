@@ -1,0 +1,1 @@
+CVBANKAS_URL = 'https://www.cvbankas.lt/?location%5B0%5D=606&location%5B1%5D=530&padalinys%5B0%5D=76'
