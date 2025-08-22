@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+from listing import Listing
+
 
 def sendRequest(url):
     response = requests.get(url)
@@ -22,22 +24,21 @@ def sendRequest(url):
 
 
 def scrapeJobs(response):
-    infos = []
     soup = BeautifulSoup(response.text, 'html.parser')
 
     job_lists = soup.find_all('a', class_='list_a can_visited list_a_has_logo')
 
     for job_list in job_lists:
-        info = {
-            'href': job_list.attrs['href'],
-            'logo': job_list.find('img')['src'] if job_list.find('img') else '',
-            'title': job_list.find('h3').get_text(strip=True) if job_list.find('h3') else '',
-            'salary_amount': job_list.find('span', class_='salary_text').get_text(strip=True) if job_list.find('span', class_='salary_text') else '',
-            'salary_calculation': job_list.find('span', class_='salary_calculation').get_text(strip=True) if job_list.find('span', class_='salary_calculation') else '',
-            'location': job_list.find('span', class_='list_city').get_text(strip=True) if job_list.find('span', class_='list_city') else '',
-            'posted': job_list.find('span', class_='txt_list_2').get_text(strip=True) if job_list.find('span', class_='txt_list_2') else '',
-        }
-        infos.append(info)
 
-    print(infos)
+        href = job_list.attrs['href']
+        logo = job_list.find('img')['src'] if job_list.find('img') else ''
+        title = job_list.find('h3').get_text(strip=True) if job_list.find('h3') else ''
+        salary_amount = job_list.find('span', class_='salary_text').get_text(strip=True) if job_list.find('span', class_='salary_text') else ''
+        salary_calculation = job_list.find('span', class_='salary_calculation').get_text(strip=True) if job_list.find('span', class_='salary_calculation') else ''
+        location = job_list.find('span', class_='list_city').get_text(strip=True) if job_list.find('span', class_='list_city') else ''
+        posted = job_list.find('span', class_='txt_list_2').get_text(strip=True) if job_list.find('span', class_='txt_list_2') else ''
+
+        l = Listing(href, logo, title, salary_amount, salary_calculation, location, posted)
+
+    return l
 
